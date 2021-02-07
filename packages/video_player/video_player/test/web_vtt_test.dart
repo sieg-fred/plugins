@@ -20,6 +20,20 @@ void main() {
       expect(parsedFile.captions[0].text, 'We are in New York City');
     });
 
+    test('with JSON Metadata', () {
+      parsedFile = WebVttCaptionFile(_valid_vtt_with_json_metadata);
+      expect(parsedFile.captions.length, 3);
+
+      expect(parsedFile.captions[0].start, Duration(milliseconds: 100));
+      expect(
+          parsedFile.captions[0].end, Duration(seconds: 7, milliseconds: 342));
+      expect(parsedFile.captions[0].text is Map<String, dynamic>, true);
+      expect(parsedFile.captions[0].text["type"], "WikipediaPage");
+      expect(parsedFile.captions[0].text["url"],
+          "https://en.wikipedia.org/wiki/Samurai_Pizza_Cats");
+      expect(parsedFile.captions[0].cue, "1");
+    });
+
     test('with Multiline', () {
       parsedFile = WebVttCaptionFile(_valid_vtt_with_multiline);
       expect(parsedFile.captions.length, 1);
@@ -122,6 +136,36 @@ when the cues should start or end.
 1
 00:01.000 --> 00:02.500
 <v Roger Bingham>We are in New York City
+''';
+
+/// See https://www.w3.org/TR/webvtt1/#introduction-metadata
+const String _valid_vtt_with_json_metadata = '''
+WEBVTT
+
+NOTE
+Thanks to http://output.jsbin.com/mugibo
+
+1
+00:00:00.100 --> 00:00:07.342
+{
+ "type": "WikipediaPage",
+ "url": "https://en.wikipedia.org/wiki/Samurai_Pizza_Cats"
+}
+
+2
+00:07.810 --> 00:09.221
+{
+ "type": "WikipediaPage",
+ "url" :"http://samuraipizzacats.wikia.com/wiki/Samurai_Pizza_Cats_Wiki"
+}
+
+3
+00:11.441 --> 00:14.441
+{
+ "type": "LongLat",
+ "lat" : "36.198269",
+ "long": "137.2315355"
+}
 ''';
 
 /// See https://www.w3.org/TR/webvtt1/#introduction-multiple-lines

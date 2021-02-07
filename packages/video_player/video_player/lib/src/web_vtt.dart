@@ -64,13 +64,20 @@ List<Caption> _parseCaptionsFromWebVttString(String file) {
     // Some captions comes with anotations (information about who/how is the speech being delivered) and styles tags.
     // E.g:
     // <v.first.loud Neil deGrasse Tyson><i>Laughs</i>
-    final String textWithoutFormat = _parseHtmlString(text);
+    var textWithoutFormat;
+    try {
+      textWithoutFormat = json.decode(text) as Map<String, dynamic>;
+      // ignore: unused_catch_clause
+    } on FormatException catch (e) {
+      textWithoutFormat = _parseHtmlString(text);
+    }
 
     final Caption newCaption = Caption(
       number: captionNumber,
       start: startAndEnd.start,
       end: startAndEnd.end,
       text: textWithoutFormat,
+      cue: hasHeader ? captionLines[0].trim() : null
     );
 
     if (newCaption.start != null && newCaption.end != null) {
