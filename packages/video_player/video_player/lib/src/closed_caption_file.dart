@@ -35,7 +35,8 @@ class Caption {
   ///
   /// This is not recommended for direct use unless you are writing a parser for
   /// a new closed captioning file type.
-  const Caption({this.number, this.start, this.end, this.text});
+  const Caption({this.number, this.start, this.end, this.text, this.cue})
+      : assert(text is String || text is Map<String, dynamic> || text == null);
 
   /// The number that this caption was assigned.
   final int number;
@@ -46,7 +47,10 @@ class Caption {
   /// When in the given video should this [Caption] be dismissed.
   final Duration end;
 
-  /// The actual text that should appear on screen to be read between [start]
+  /// The actual text that should appear on screen to be read or json between [start]
   /// and [end].
-  final String text;
+  final dynamic text;
+
+  /// The Cue identifier between [start] and [end].
+  final String cue;
 }
